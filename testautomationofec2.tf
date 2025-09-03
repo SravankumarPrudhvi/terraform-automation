@@ -3,14 +3,7 @@ provider "aws" {
   
 }
 
-resource "aws_instance" "CICD" {
-  ami = "ami-09b0a86a2c84101e1"
-  instance_type = "t2.micro"
-  key_name = "mykeypair-1"
-  tags = {
-    Name = "CI/CD"
-  }
-}
+
 
 resource "aws_vpc" "vpc-cicd" {
   cidr_block = "10.0.0.0/16"
@@ -61,6 +54,17 @@ resource "aws_security_group" "security-cicd" {
   }
    
    tags = {
-     Name = "secirity-cicd"
+     Name = "security-cicd"
    }
+}
+
+resource "aws_instance" "CICD" {
+  ami = "ami-09b0a86a2c84101e1"
+  instance_type = "t2.micro"
+  key_name = "mykeypair-1"
+  vpc_security_group_ids = aws_security_group.security-cicd
+  subnet_id = aws_subnet.subnet-1
+  tags = {
+    Name = "CI/CD"
+  }
 }
